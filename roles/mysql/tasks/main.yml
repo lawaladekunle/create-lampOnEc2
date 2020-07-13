@@ -18,5 +18,10 @@
     owner: root
     password: root
 
+- name: Run script for securing mysql 
+  shell: /var/tmp/mysql-secure-installation.sh >> /var/log/mysql-secure-installation.log
+
+
+
 
 

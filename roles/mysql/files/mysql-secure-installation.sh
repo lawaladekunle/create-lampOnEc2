@@ -1,5 +1,6 @@
 #!/bin/bash
 # Thanks to https://gist.github.com/Mins/4602864
+# Script tested on mysql Ver 15.1 Distrib 5.5.64-MariaDB
 
 # Install Expect
 yum -y install expect
@@ -15,7 +16,7 @@ then
 fi
 
 # Set Root Password Here - Migrate to Ansible Vault
-MYSQL_ROOT_PASSWORD=Blizzard42
+MYSQL_ROOT_PASSWORD=dbAdminPassword
 
 # Run mysql_secure_installation
 
@@ -53,4 +54,4 @@ expect eof
 
 echo "$SECURE_MYSQL"
 
-yum remove expect -y
+yum -y remove expect
