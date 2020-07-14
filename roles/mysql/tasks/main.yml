@@ -1,9 +1,5 @@
 ---
 # tasks file for mysql
-- name: Install MariaDB
-  yum: ['mariadb-server.x86_64', 'mariadb-libs.x86_64']
-  state: present
-
 - name: Upload Yum Repo Config for MariaDB
   copy:
     src: MariaDB.repo
@@ -11,15 +7,53 @@
     owner: root
     group: root
 
-- name: Upload script for securing mysql
-  copy:
-    src: mysql-secure-installation.sh
-    dest: /var/tmp
-    owner: root
-    password: root
+- name: Install MariaDB
+  yum: ['mariadb-server.x86_64', 'mariadb-libs.x86_64']
+  state: present
 
-- name: Run script for securing mysql 
-  shell: /var/tmp/mysql-secure-installation.sh >> /var/log/mysql-secure-installation.log
+- name: Start Maria DB
+  systemd:
+    name: mariadb
+    state: started
+
+- name: Run mysql secure installation script
+  shell:  |
+    set timeout 5
+    spawn mysql_secure_installation
+
+    expect \"Enter current password for root (enter for none):\"
+    send \"\r\"
+
+    expect \"Set root password?\"
+    send \"Y\r\"
+
+    expect \"New password:\"
+    send \"$MYSQL_ROOT_PASSWORD\r\"
+
+    expect \"Re-enter new password:\"
+    send \"$MYSQL_ROOT_PASSWORD\r\"
+
+    expect \"Remove anonymous users?\"
+    send \"Y\r\"
+
+    expect \"Disallow root login remotely?\"
+    send \"Y\r\"
+
+    expect \"Remove test database and access to it?\"
+    send \"Y\r\"
+
+    expect \"Reload privilege tables now?\"
+    send \"Y\r\"
+
+    expect eof 
+  args:
+    executable: /usr/bin/expect
+
+- name: Uninstall Expect
+  yum: 
+    name: expect
+    state: absent
+
 
 
 
