@@ -1,0 +1,52 @@
+---
+# tasks file for jenkins
+- name: Disable Docker on Amazon Linux Extras
+  command:
+    cmd: amazon-linux-extras disable docker
+
+- name: Import GPG Key for Jenkins
+  rpm_key:
+    state: present
+    key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+- name: Enable Java 11 in Amazon Linux Extras
+  command:
+    cmd: amazon-linux-extras install java-openjdk11 -y
+
+- name: Create Jenkins Repository
+  yum_repository:
+    name: JenkinsRepo
+    description: Jenkins repository
+    baseurl: http://pkg.jenkins.io/redhat-stable
+    enabled: yes
+    gpgcheck: yes
+
+- name: Install Java 11
+  yum:
+    name: java-11-openjdk
+    state: present
+
+#- name: Set Java 8 As the Default
+#  command: /usr/sbin/alternatives --set java /usr/bin/jvm/
+
+- name: Install Jenkins
+  yum:
+    name: jenkins.noarch
+    state: present
+
+- name: Start Jenkins
+  systemd:
+    name: jenkins
+    state: started
+
+- name: Wait for Password File
+  wait_for:
+    path: /var/lib/jenkins/secrets/initialAdminPassword
+    state: present
+    msg: Can't find the password file
+    timeout: 300
+
+- name: Get Jenkins Password File
+  fetch:
+    src: /var/lib/jenkins/secrets/initialAdminPassword
+    dest: /tmp/
