@@ -2,6 +2,10 @@
 # tasks file for php
 - name: Activate Amazon Linux PHP 7 Repo
   command:
+    cmd: sudo amazon-linux-extras disable docker
+
+- name: Activate Amazon Linux PHP 7 Repo
+  command:
     cmd: sudo amazon-linux-extras install php7.3=stable -y
    notify: restart Apache
 
