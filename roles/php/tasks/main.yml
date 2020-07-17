@@ -1,10 +1,10 @@
 ---
 # tasks file for php
-- name: Install packages for PHP 7 
-  yum:
-    name: ['php.x86_64', 'php-gd.x86_64', 'php-mbstring.x86_64', 'php-mysqlnd.x86_64', 'php-pdo.x86_64', 'php-pecl-memcache.x86_64']
-    state: present
-  notify: restart Apache
+- name: Activate Amazon Linux PHP 7 Repo
+  command:
+    cmd: sudo amazon-linux-extras install php7.3=stable -y
+   notify: restart Apache
+
 - name: Upload Webpage 
   copy: 
     src: index.php
