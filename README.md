@@ -1,1 +1,4 @@
-Create a LAMP Stack on AWS EC2 with Ansible using dynamic inventories. 
+- Create a LAMP Stack on AWS EC2 with Ansible using dynamic inventories. 
+- Installs Apache
+- Installs PHP
+- Installs MySQL
